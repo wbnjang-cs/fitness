@@ -1,18 +1,26 @@
-# Python backend
+
 backend/venv/
-backend/__pycache__/
-backend/**/__pycache__/
+backend/.venv/
+venv/
+.venv/
+__pycache__/
 *.pyc
-
-# Env / secrets (API keys for your AI calls, etc.)
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+node_modules/
+dist/
+build/
+.vite/
+coverage/
+*.log
+npm-debug.log*
 .env
-.env.local
+.env.*
+!.env.example
 *.pem
-
-# OS
 .DS_Store
 Thumbs.db
-
-# Editor
 .vscode/
 .idea/
