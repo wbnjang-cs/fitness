@@ -1,21 +1,21 @@
-import { useRef } from "react";
-import { useCamera } from "./hooks/useCamera";
-import { usePoseLoop } from "./hooks/usePoseLoop";
+import WebcamPage from "./pages/webcamPage";
+import MenuPage from "./pages/menuPage";
+import {useState} from "react"
+
+
 
 export default function App() {
-  const videoRef = useRef(null);
-  const canvasRef = useRef(null);
+  const [config, setConfig] = useState(null)
 
-  const cameraReady = useCamera(videoRef, canvasRef);
-  usePoseLoop(videoRef, canvasRef, cameraReady);
-
-  return (
-    <div style={{ position: "relative", display: "inline-block" }}>
-      <video ref={videoRef} autoPlay muted playsInline style={{ display: "block" }} />
-      <canvas
-        ref={canvasRef}
-        style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
-      />
-    </div>
-  );
+  if (config === null){
+    return <MenuPage updateConfig={setConfig} />
+  }
+  return <div> 
+    <WebcamPage 
+      repsPerSet={config.repsPerSet}
+      setAmount = {config.setAmount}
+      exerciseName = {config.exerciseName}
+      updateConfig = {setConfig}
+     />
+  </div> 
 }

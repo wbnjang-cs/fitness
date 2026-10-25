@@ -1,24 +1,31 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { createPoseLandmarker } from "../utils/poseLandmarker";
 import { drawPose } from "../utils/draw";
 import { createAngleCalculator } from "../utils/geometry";
 import { exercises } from "../exercises";
+import { playRep, playWarning } from "../utils/sound";
 
-function waitForVideo(video) {
-  return new Promise((resolve) => {
-    if (video.readyState >= 2 && video.videoWidth > 0) return resolve();
-    video.addEventListener("loadeddata", () => resolve(), { once: true });
-  });
-}
 
-export function usePoseLoop(videoRef, canvasRef, enabled) {
-  const exerciseName = "Curl";
-  const createExercise = exercises[exerciseName];
-  const onRep = (count) => console.log("rep", count);
-  const onWarning = (type) => console.log("warning", type);
-  const update = createExercise({onRep, onWarning})
+export function usePoseLoop(videoRef, canvasRef, enabled, setReps, setWarning, allowDrawRef, exerciseName, currentWarning) {
   useEffect(() => {
     if (!enabled) return;
+    const exerciseName = "Curl";
+    const exercise = exercises[exerciseName];
+    const update = exercise.create({
+      onRep: () => {
+        setReps((r) => r + 1);
+        playRep();
+      },
+      onWarning: (warningKey) => {
+        setWarning(warningKey ? exercise.warnings[warningKey] : null);
+        if (warningKey) {
+          playWarning();
+          const w = currentWarning.current;
+          w[warningKey] = (w[warningKey] ?? 0) + 1;
+        }
+      },
+    });
+    const drawPoints = new Set(Object.values(exercise.angles).flat());
 
     let cancelled = false;
     let rafID;
@@ -31,7 +38,6 @@ export function usePoseLoop(videoRef, canvasRef, enabled) {
 
       [landmarker] = await Promise.all([
         createPoseLandmarker(),
-        waitForVideo(video),
       ]);
       if (cancelled) {
         landmarker.close();
@@ -43,9 +49,13 @@ export function usePoseLoop(videoRef, canvasRef, enabled) {
       function handleFrame(result) {
         const pose = result.landmarks[0];
         if (!pose) return;
-        drawPose(ctx, pose, canvas.width, canvas.height);
-        const angle = calculateAngle(pose[12], pose[14], pose[16]);
-        update(angle)
+        const angles = {};
+        for (const [name, [a, b, c]] of Object.entries(exercise.angles)) {
+          angles[name] = calculateAngle(pose[a], pose[b], pose[c]);
+        }
+        if(allowDrawRef.current)
+          drawPose(ctx, pose, canvas.width, canvas.height, drawPoints, exercise.angles, angles);
+        update(angles)
       }
 
       function renderLoop() {
@@ -65,5 +75,5 @@ export function usePoseLoop(videoRef, canvasRef, enabled) {
       cancelAnimationFrame(rafID);
       landmarker?.close();
     };
-  }, [enabled, videoRef, canvasRef]);
+  }, [enabled, videoRef, canvasRef, allowDrawRef]);
 }

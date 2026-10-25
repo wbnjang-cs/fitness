@@ -9,3 +9,8 @@ export const LANDMARK_NAMES = [
   "left ankle", "right ankle", "left heel", "right heel",
   "left foot index", "right foot index",
 ];
+
+export const WARNING_LABELS = {
+  overCurled: "Curled too high",
+  straightened : "Arm lowered too much",
+};

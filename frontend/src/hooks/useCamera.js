@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
 
-export function useCamera(videoRef, canvasRef) {
+export function useCamera(videoRef, canvasRef, active) {
   const [ready, setReady] = useState(false);
+  
 
   useEffect(() => {
+    if (!active) return;
+    const video = videoRef.current;
     let stream;
     let cancelled = false;
 
@@ -26,8 +29,10 @@ export function useCamera(videoRef, canvasRef) {
     return () => {
       cancelled = true;
       stream?.getTracks().forEach((t) => t.stop());
+      if (video) video.srcObject = null;
+      setReady(false);
     };
-  }, [videoRef, canvasRef]);
+  }, [videoRef, canvasRef, active]);
 
   return ready;
 }

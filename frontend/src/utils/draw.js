@@ -1,16 +1,24 @@
 import { LANDMARK_NAMES } from "../constants";
+import { drawAngle } from "./drawAngle";
 
-export function drawPose(ctx, landmarks, width, height) {
+export function drawPose(ctx, pose, width, height, drawPoints, angleSpecs, angles) {
   ctx.clearRect(0, 0, width, height);
   ctx.fillStyle = "red";
 
-  landmarks?.forEach((point, i) => {
-    if (i !== 12 && i !== 14 && i !== 16) return; // skip face points
+  pose?.forEach((point, i) => {
+    if (!drawPoints.has(i)) return;
+
     const px = point.x * width;
     const py = point.y * height;
     ctx.beginPath();
     ctx.arc(px, py, 4, 0, 2 * Math.PI);
     ctx.fill();
-    // ctx.fillText(LANDMARK_NAMES[i], px, py - 8);
   });
+
+  if (!pose || !angles) return;
+
+  for (const [name, idx] of Object.entries(angleSpecs)) {
+    if (angles[name] == null) continue;
+    drawAngle(ctx, pose, idx, angles[name], width, height);
+  }
 }

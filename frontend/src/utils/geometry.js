@@ -7,7 +7,3 @@ export function createAngleCalculator(w, h) {
     return Math.atan2(Math.abs(cross), dot) * (180 / Math.PI);
   };
 }
-
-export function toPixels(pose, w, h) {
-  return pose.map(p => ({ x: p.x * w, y: p.y * h, z: p.z, visibility: p.visibility }));
-}

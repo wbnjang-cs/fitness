@@ -1,6 +1,7 @@
 // workout/exercises/index.js
-import { createCurl } from "./curl";
+
+import { curl } from "./curl";
 
 export const exercises = {
-  Curl: createCurl,
+  Curl: curl,
 };
