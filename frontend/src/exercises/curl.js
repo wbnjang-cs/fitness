@@ -3,7 +3,7 @@
 import { config } from "../config";
 
 export const curl = {
-  angles: {
+  anglesNeeded: {
     elbow: [12, 14, 16],
     elbowL: [11,13,15]
   },
@@ -11,7 +11,7 @@ export const curl = {
     overCurled: "Raising arm too high",
     straightened: "Don't straighten your arm fully",
   },
-  create({ onRep, onWarning }) {
+  handleAngles({ onRep, onWarning }) {
     const s = config.curl;
     let stage = null;
     let overCurledStatus = false;
