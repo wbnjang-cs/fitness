@@ -4,7 +4,7 @@ import { exercises } from "../exercises/index.js"; // adjust the path to match y
 
 const EXERCISE_NAMES = Object.keys(exercises);
 
-export default function MenuPage({ updateConfig }) {
+export default function MenuPage({ updateConfig, goBack }) {
   const [reps, setReps] = useState("");
   const [sets, setSets] = useState("");
   const [exerciseName, setExerciseName] = useState("");
@@ -59,6 +59,10 @@ export default function MenuPage({ updateConfig }) {
 
       <button className="primary" onClick={handleStart} disabled={!canStart}>
         Start
+      </button>
+
+      <button className="primary" onClick={() => goBack(null)}>
+        Go back to Main Page
       </button>
     </div>
   );

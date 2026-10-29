@@ -211,3 +211,43 @@ body {
 .popuptext button {
   margin-top: 4px;
 }
+
+
+.home {
+  width: 100%;
+  max-width: 360px;
+  padding: 24px;
+  background: var(--surface);
+  border: 3px solid var(--accent);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.home h1 {
+  margin: 0 0 4px;
+  text-align: center;
+  font-size: 1.6rem;
+  color: var(--navy);
+}
+
+.menu button,
+.home button,
+.controls button,
+.popuptext button {
+  padding: 14px;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  background: var(--navy);
+  color: #ffffff;
+  border: 3px solid var(--accent);
+}
+
+.menu button:hover:not(:disabled),
+.home button:hover,
+.controls button:hover,
+.popuptext button:hover {
+  background: #1d4ed8;
+}
